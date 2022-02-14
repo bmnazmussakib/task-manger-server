@@ -21,20 +21,26 @@ conn.connect((error) => {
         console.log(error);
     } else {
         console.log("Connection Successful");
-        // insertData(conn);
 
-        // Data Insert
+        // Insert Data
         app.post('/insert', function (req, res) {
             insertData(conn);
             res.send('Got a POST request');
         })
 
 
-        // Data Delete
+        //  Delete Data
         app.delete('/delete', function (req, res) {
             dataDelete(conn);
             res.send('Data Deleted');
         })
+
+
+        // Update Data
+        app.put('/update', function (req, res) {
+            dataUpdate(conn);
+            res.send('Data Updated')
+          })
     }
 })
 
@@ -56,7 +62,7 @@ const insertData = (conn) => {
 }
 
 
-// Data Delete method added
+// Data Delete Function
 const dataDelete = (conn) => {
 
     let deleteQuery = "DELETE FROM `task` WHERE `id`='5' ";
@@ -71,6 +77,25 @@ const dataDelete = (conn) => {
     })
 
 }
+
+
+// Data Update function
+const dataUpdate = (conn) => {
+    let updateQuery = "UPDATE `task` SET `title`='Travel' WHERE `id`='7' ";
+
+    conn.query(updateQuery, (error) => {
+        if (error) {
+            console.log("Data Update Failed");
+            console.log(error);
+        } else {
+            console.log("Data Update Successful");
+        }
+    })
+
+}
+
+
+
 
 
 app.get('/', function (req, res) {
