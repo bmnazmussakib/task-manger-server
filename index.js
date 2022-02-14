@@ -65,10 +65,19 @@ conn.connect((error) => {
 
         //  Delete Data---------------------------------
         app.delete('/delete/:id', function (req, res) {
-            // dataDelete(conn);
-            // res.send('Data Deleted');
-            const id = req.params.id;
-            console.log(id);
+            const taskId = req.params.id;
+
+            let deleteQuery = "DELETE FROM task WHERE id =" + taskId;
+
+            conn.query(deleteQuery, (error) => {
+                if (error) {
+                    console.log("Data Delete Failed");
+                    console.log(error);
+                } else {
+                    console.log("Data Delete Successful");
+                }
+            })
+
         })
 
 
