@@ -1,8 +1,26 @@
+// Express JS
 const express = require('express');
 const app = express();
 
+// port
+const PORT = 1010;
+
+
+// Cors
+const cors = require('cors');
+app.use(cors());
+
+
+// Body Parser
+var bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+
+// MySQL
 const mysql = require('mysql');
 
+// Database Config
 const databaseConnectionConfig = {
     host: 'localhost',
     user: 'root',
@@ -10,10 +28,10 @@ const databaseConnectionConfig = {
     database: 'todo'
 }
 
+
 const conn = mysql.createConnection(databaseConnectionConfig)
 
-// port
-const PORT = 1010;
+
 
 conn.connect((error) => {
     if (error) {
@@ -22,29 +40,47 @@ conn.connect((error) => {
     } else {
         console.log("Connection Successful");
 
-        // Insert Data
+
+
+        // Insert Data---------------------------------
         app.post('/insert', function (req, res) {
-            insertData(conn);
-            res.send('Got a POST request');
+            const title = req.body.task;
+            const date = req.body.date;
+            const duration = req.body.duration;
+            const type = req.body.type;
+
+            const sql = "INSERT INTO task VALUES ?";
+            const values = [['null', title, date, duration, type]];
+
+            conn.query(sql, [values], (error) => {
+                if (error) {
+                    console.log("Data Insert Failed");
+                    console.log(error);
+                } else {
+                    console.log("Data Insert Successful");
+                }
+            })
         })
 
 
-        //  Delete Data
-        app.delete('/delete', function (req, res) {
-            dataDelete(conn);
-            res.send('Data Deleted');
+        //  Delete Data---------------------------------
+        app.delete('/delete/:id', function (req, res) {
+            // dataDelete(conn);
+            // res.send('Data Deleted');
+            const id = req.params.id;
+            console.log(id);
         })
 
 
-        // Update Data
+        // Update Data---------------------------------
         app.put('/update', function (req, res) {
             dataUpdate(conn);
             res.send('Data Updated')
         })
 
 
-        // Select Data 
-        app.get('/select', function (req, res) {
+        // Select Data---------------------------------
+        app.get('/allTask', function (req, res) {
             let selectQuery = "SELECT * FROM `task`";
 
             conn.query(selectQuery, (error, result) => {
@@ -55,7 +91,7 @@ conn.connect((error) => {
                     res.send(result)
                 }
             })
-            
+
         })
     }
 })
@@ -63,34 +99,34 @@ conn.connect((error) => {
 
 
 // Data Insert Function
-const insertData = (conn) => {
+// const insertData = (conn) => {
 
-    let insertQuery = "INSERT INTO `task`(`title`, `date`, `duration`, `type`) VALUES ('Drive', '2022/02/06', '200', 'Learning')";
+//     let insertQuery = "INSERT INTO `task`(`title`, `date`, `duration`, `type`) VALUES ('Drive', '2022/02/06', '200', 'Learning')";
 
-    conn.query(insertQuery, (error) => {
-        if (error) {
-            console.log("Data Insert Failed");
-            console.log(error);
-        } else {
-            console.log("Data Insert Successful");
-        }
-    })
-}
+//     conn.query(insertQuery, (error) => {
+//         if (error) {
+//             console.log("Data Insert Failed");
+//             console.log(error);
+//         } else {
+//             console.log("Data Insert Successful");
+//         }
+//     })
+// }
 
 
 // Data Delete Function
 const dataDelete = (conn) => {
 
-    let deleteQuery = "DELETE FROM `task` WHERE `id`='5' ";
+    // let deleteQuery = "DELETE FROM `task` WHERE `id`='5' ";
 
-    conn.query(deleteQuery, (error) => {
-        if (error) {
-            console.log("Data Delete Failed");
-            console.log(error);
-        } else {
-            console.log("Data Delete Successful");
-        }
-    })
+    // conn.query(deleteQuery, (error) => {
+    //     if (error) {
+    //         console.log("Data Delete Failed");
+    //         console.log(error);
+    //     } else {
+    //         console.log("Data Delete Successful");
+    //     }
+    // })
 
 }
 
