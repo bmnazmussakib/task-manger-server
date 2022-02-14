@@ -40,7 +40,23 @@ conn.connect((error) => {
         app.put('/update', function (req, res) {
             dataUpdate(conn);
             res.send('Data Updated')
-          })
+        })
+
+
+        // Select Data 
+        app.get('/select', function (req, res) {
+            let selectQuery = "SELECT * FROM `task`";
+
+            conn.query(selectQuery, (error, result) => {
+                if (error) {
+                    console.log("Data Select Failed");
+                    console.log(error);
+                } else {
+                    res.send(result)
+                }
+            })
+            
+        })
     }
 })
 
@@ -93,6 +109,24 @@ const dataUpdate = (conn) => {
     })
 
 }
+
+
+// Select Data Function
+// const dataSelect = (conn) => {
+
+//     let selectQuery = "SELECT * FROM `task`";
+
+//     conn.query(selectQuery, (error, result) => {
+//         if (error) {
+//             console.log("Data Select Failed");
+//             console.log(error);
+//         } else {
+//             console.log(result);
+//         }
+//     })
+// }
+
+
 
 
 
