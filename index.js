@@ -21,13 +21,39 @@ conn.connect((error) => {
         console.log(error);
     } else {
         console.log("Connection Successful");
+        // insertData(conn);
+
+        app.post('/insert', function (req, res) {
+            insertData(conn);
+            res.send('Got a POST request');
+          })
     }
 })
 
-// app.get('/', function (req, res) {
-//   res.send('Hello World')
-// })
 
-// app.listen(PORT, () => {
-//     console.log(`Server is running at http://localhost:${PORT}`);
-// });
+
+// Data Insert Function
+const insertData = (conn) => {
+    
+    let sqlQuery = "INSERT INTO `task`(`title`, `date`, `duration`, `type`) VALUES ('Drive', '2022/02/06', '200', 'Learning')";
+
+    conn.query(sqlQuery, (error) => {
+        if (error) {
+            console.log("Data Insert Failed");
+            console.log(error);
+        } else {
+            console.log("Data Insert Successful");            
+        }
+    })
+}
+
+
+
+
+app.get('/', function (req, res) {
+  res.send('Hello World')
+})
+
+app.listen(PORT, () => {
+    console.log(`Server is running at http://localhost:${PORT}`);
+});
